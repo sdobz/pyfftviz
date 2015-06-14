@@ -40,9 +40,9 @@ class FFTClip(AudioFileClip):
 
         # Compute a normalized fft over the samples from start_frame to start_frame + fft_size
         samples = self.get_samples(start_frame)
-        fft_data = absolute(rfft(samples))**2/self.fps
-        fft_data *= 1e2
+        fft_data = absolute(rfft(samples))**2
 
+        fft_data *= 1e2
         self.fft_cache = fft_data
         self.fft_cache_index = fft_index
         return fft_data
@@ -51,6 +51,4 @@ class FFTClip(AudioFileClip):
         # Get fft_size samples starting at start_frame
         frame_times = np.array([float(frame)/self.fps for frame in
             xrange(start_frame, start_frame+self.fft_size)])
-        if self.nchannels == 1:
-            return self.make_frame(frame_times)
         return self.make_frame(frame_times)[:,0]

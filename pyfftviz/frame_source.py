@@ -2,6 +2,7 @@
 import glob
 from moviepy.video.VideoClip import VideoClip
 from scipy.ndimage import imread as scipy_imread
+from scipy.misc import imresize as scipy_imresize
 
 # glob.iglob('*.png')
 
@@ -9,11 +10,12 @@ cap = lambda lower, value, upper: min(max(value, lower), upper)
 
 
 class GlobStore(object):
-    def __init__(self, image_pattern):
+    def __init__(self, image_pattern, resize=None):
         self.images = glob.glob(image_pattern)
         self.images_len = len(self.images)
         assert self.images_len > 0
         self.image_cache = {}
+        self.resize = resize
 
     def image_from_normal(self, n):
         image_index = cap(0, int(n * self.images_len), self.images_len-1)
@@ -24,6 +26,8 @@ class GlobStore(object):
             return self.image_cache[image_filename]
 
         image_data = scipy_imread(image_filename)
+        if self.resize:
+            image_data = scipy_imresize(image_data, size=self.resize, interp='bicubic')
         if image_data.shape[2] == 4:
             image_data = image_data[:,:,0:3]
 
