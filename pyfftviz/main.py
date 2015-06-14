@@ -50,4 +50,4 @@ def main():
             amplitude_clips.append(amplitude_clip)
 
     composite = CompositeVideoClip(amplitude_clips, size=(32, 32))
-    composite.write_videofile(song_filename + '.mp4', fps=24)
+    composite.write_videofile(viz_filename + '.mp4', fps=24)
